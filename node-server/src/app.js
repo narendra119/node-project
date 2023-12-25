@@ -2,12 +2,17 @@ const path = require('path')
 const express = require('express')
 
 
-console.log(__dirname)
-const publicDirectorypath = path.join(__dirname, "../public")
-
 const app = express()
 
+// Setting up the directory paths
+const publicDirectorypath = path.join(__dirname, "../public")
+const templatesDirectorypath = path.join(__dirname, "../templates")
+
+// Handlebars config setup
 app.set('view engine', 'hbs')
+app.set('views', templatesDirectorypath)
+
+// Static Directory setup
 app.use(express.static(publicDirectorypath))
 
 // app.com
