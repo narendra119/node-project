@@ -49,10 +49,26 @@ app.get('/help', (req, res) => {
 })
 
 
+app.get('/help/*', (req, res) => {
+    res.render("error",{
+        errorMessage: "No Article Found",
+        name: "Narendra",
+    })
+})
+
+
 app.get('/about', (req, res) => {
     res.render("about", {
         title: "About using hbs",
         name: "Naren",
+    })
+})
+
+
+app.get('*', (req, res) => {
+    res.render("error", {
+        errorMessage: "404 Not Found",
+        name: "Narendra",
     })
 })
 
