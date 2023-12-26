@@ -33,7 +33,16 @@ app.get('', (req, res) => {
 
 
 app.get('/weather', (req, res) => {
+    if (!req.query.address) {
+        return res.send({
+            'error': 'Bro! You forgot to send the [address]'
+        })
+    }
+
+    address = req.query.address
+
     res.send({
+        address: address,
         location: "Bangalore",
         forecast: 23.7,
         name: "Narendra",
