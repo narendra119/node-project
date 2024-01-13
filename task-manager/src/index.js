@@ -21,6 +21,32 @@ app.post('/users', (req, res) => {
 })
 
 
+app.get('/users', (req, res) => {
+    User.find({}).then((result) => {
+        return res.status(200).send(result)
+    }).catch((error) => {
+        return res.status(500).send(error)
+    })
+
+})
+
+
+app.get('/users/:id', (req, res) => {
+    const _id = req.params.id
+
+    User.findById(_id).then((user) => {
+        if (!user) {
+            return res.status(404).send()
+        }
+        return res.status(200).send(user)
+    }).catch((error) => {
+        return res.status(500).send(error)
+    })
+
+
+})
+
+
 app.post('/tasks', (req, res) => {
     const task = new Task(req.body)
 
@@ -29,6 +55,31 @@ app.post('/tasks', (req, res) => {
     }).catch((error) => {
         res.status(500).send(error)
     })
+})
+
+
+app.get('/tasks', (req, res) => {
+
+    Task.find({}).then((result) => {
+        return res.status(200).send(result)
+    }).catch((error) => {
+        return res.status(500).send(error)
+    })
+})
+
+
+app.get('/tasks/:id', (req, res) => {
+    const _id = req.params.id
+
+    Task.findById(_id).then((task) => {
+        if (!task) {
+            return res.status(404).send()
+        }
+        return res.status(200).send(task)
+    }).catch((error) => {
+        return res.status(500).send(error)
+    })
+
 })
 
 
