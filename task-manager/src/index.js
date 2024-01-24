@@ -73,6 +73,43 @@ app.get('/users/:id', (req, res) => {
 })
 
 
+app.patch('/users/:id', async (req, res) => {
+
+    try {
+        const _id = req.params.id
+        const updates = req.body
+
+        const user = await User.findByIdAndUpdate(_id, updates, { new : true, runValidators: true})
+        if (!user) {
+            res.status(404).send("User not found")
+        }
+
+        res.status(200).send(user)
+    } catch (e) {
+        res.status(500).send()
+    }
+
+})
+
+
+app.delete('/users/:id', async (req, res) => {
+
+    try {
+        const _id = req.params.id
+
+        const user = await User.findByIdAndDelete(_id, )
+        if (!user) {
+            res.status(404).send("User not found")
+        }
+
+        res.status(200).send(user)
+    } catch (e) {
+        res.status(500).send()
+    }
+
+})
+
+
 app.post('/tasks', async (req, res) => {
     const task = new Task(req.body)
 
@@ -133,6 +170,24 @@ app.get('/tasks/:id', async (req, res) => {
     // })
 
 })
+
+
+app.get('/tasks/:id', async (req, res) => {
+
+    try {
+        const _id = req.params.id
+
+        const task = await Task.findByIdAndDelete(_id)
+        if (!task) {
+            res.status(404).send()
+        }
+        console.log(task)
+        res.status(204).send(task)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
 
 
 app.listen(port, () => {
