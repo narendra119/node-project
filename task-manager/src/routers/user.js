@@ -24,6 +24,17 @@ router.post('/users', async (req, res) => {
 })
 
 
+router.post("/user/login", async (req, res) => {
+
+    try {
+        const user = User.findByCredentials(req.body.email, req.body.password)
+        res.send(user)
+    } catch {
+        res.status(400).send()
+    }
+})
+
+
 router.get('/users', async (req, res) => {
 
     try {
@@ -42,16 +53,20 @@ router.get('/users', async (req, res) => {
 })
 
 
-router.get('/users/:id', (req, res) => {
+router.get('/users/:id', async (req, res) => {
     const _id = req.params.id
 
     try {
-        const user = User.findById(_id)
+        console.log("id is", _id)
+
+        const user = await User.findById(_id)
         console.log("user", user.email)
+
         if (!user) {
             return res.status(404).send()
         }
-        return res.status(200).send(user.name)
+
+        return res.status(200).send(user)
     } catch (e) {
         console.log("error")
         return res.status(500).send(e)
@@ -71,18 +86,30 @@ router.get('/users/:id', (req, res) => {
 
 router.patch('/users/:id', async (req, res) => {
 
+    const updates = Object.keys(req.body)
+    allowedUpdates = ['name', 'email', 'password', 'age']
+    const isValidUpdate = updates.every((update) => allowedUpdates.includes(update))
+
+    if (!isValidUpdate) {
+        return res.status(400).send("Please send valid fields for update")
+    }
+
     try {
         const _id = req.params.id
-        const updates = req.body
 
-        const user = await User.findByIdAndUpdate(_id, updates, { new : true, runValidators: true})
+        const user = await User.findById(_id)
+
         if (!user) {
             res.status(404).send("User not found")
         }
 
+        updates.forEach((update) => user[update] = req.body[update])
+
+        await user.save()
+
         res.status(200).send(user)
     } catch (e) {
-        res.status(500).send()
+        res.status(500).send(e)
     }
 
 })
